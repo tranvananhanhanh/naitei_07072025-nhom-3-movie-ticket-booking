@@ -1,0 +1,8 @@
+<th:block th:fragment="head(title)" xmlns:th="http://www.w3.org/1999/xhtml">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title th:text="${title} ?: 'Admin'">Admin</title>
+
+    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet"/>
+</th:block>

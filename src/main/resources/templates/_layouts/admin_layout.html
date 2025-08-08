@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(pageTitle, content)">
+<head th:replace="~{_fragments/_head :: head(${pageTitle})}"></head>
+<body id="page-top">
+<div id="wrapper">
+    <div th:replace="~{_fragments/_sidebar :: sidebar}"></div>
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <div th:replace="~{_fragments/_topbar :: topbar}"></div>
+
+            <div class="container-fluid">
+                <h1 class="h3 mb-4 text-gray-800" th:text="${pageTitle}">Dashboard</h1>
+                <div th:insert="${content}"></div>
+            </div>
+        </div>
+
+        <div th:replace="~{_fragments/_footer :: footer}"></div>
+    </div>
+</div>
+</body>
+</html>
