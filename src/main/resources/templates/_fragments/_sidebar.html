@@ -1,0 +1,22 @@
+<th:block th:fragment="sidebar" xmlns:th="http://www.w3.org/1999/xhtml">
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" th:href="@{/admin}">
+            <div class="sidebar-brand-icon"><i class="fas fa-film"></i></div>
+            <div class="sidebar-brand-text mx-3">Movie Admin</div>
+        </a>
+
+        <hr class="sidebar-divider my-0">
+        <li class="nav-item"><a class="nav-link" th:href="@{/admin}"><i class="fas fa-fw fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">Quản lý</div>
+        <li class="nav-item"><a class="nav-link" th:href="@{/admin/movies}"><i class="fas fa-film"></i><span>Phim</span></a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/admin/cinemas}"><i class="fas fa-building"></i><span>Rạp</span></a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/admin/showtimes}"><i class="far fa-calendar-alt"></i><span>Xuất chiếu</span></a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/admin/bookings}"><i class="fas fa-ticket-alt"></i><span>Đặt vé</span></a></li>
+
+        <hr class="sidebar-divider d-none d-md-block">
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+    </ul>
+</th:block>
