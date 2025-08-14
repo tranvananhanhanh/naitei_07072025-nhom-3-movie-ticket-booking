@@ -24,12 +24,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         try {
-            const csrfToken = document.getElementById('_csrf').value;
-            const res = await fetch('/registerAdmin', {
+            const res = await fetch('/auth/register', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
             });

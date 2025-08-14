@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${statusCode != null and title != null} ? ${statusCode} + ' - ' + ${title} : #{error.page}">
+        Error Page
+    </title>
+
+    <link rel="stylesheet" th:href="@{/vendor/fontawesome-free/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/sb-admin-2.min.css}">
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 font-weight-bold"
+                th:classappend="${statusCode == 500} ? ' text-danger' :
+                                (${statusCode == 401} ? ' text-warning' :
+                                (${statusCode == 403} ? ' text-info' : ' text-secondary'))">
+                [[${statusCode}]]
+            </h1>
+
+            <p class="lead">[[${title}]]</p>
+            <p th:text="${errorMessage}"></p>
+
+            <a th:href="@{${redirectUrl}}" class="btn btn-primary mt-3">
+                [[${buttonLabel}]]
+            </a>
+        </div>
+    </div>
+</div>
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/js/sb-admin-2.min.js}"></script>
+</body>
+</html>

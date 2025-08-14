@@ -4,6 +4,7 @@ import com.naitei.group3.movie_ticket_booking_system.dto.request.RegisterRequest
 import com.naitei.group3.movie_ticket_booking_system.enums.RoleType;
 import com.naitei.group3.movie_ticket_booking_system.exception.RoleNotFoundException;
 import com.naitei.group3.movie_ticket_booking_system.exception.UserAlreadyExistsException;
+import com.naitei.group3.movie_ticket_booking_system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;

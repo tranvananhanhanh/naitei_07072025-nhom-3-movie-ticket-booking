@@ -108,8 +108,8 @@ public class GlobalExceptionHandler {
                 403,
                 getMessage("error.accessdenied.title", null),
                 getMessage("error.accessdenied.mess", null),
-                "/admin",
-                getMessage("button.back.home", null)
+                "/login",
+                getMessage("button.back.login", null)
         );
     }
 
