@@ -10,7 +10,6 @@ import com.naitei.group3.movie_ticket_booking_system.entity.Movie;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
-@Repository
 public interface MovieRepository extends JpaRepository<Movie, Long>, JpaSpecificationExecutor<Movie> {
 
     @Query("""

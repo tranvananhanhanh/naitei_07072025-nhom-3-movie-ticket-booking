@@ -2,6 +2,7 @@ package com.naitei.group3.movie_ticket_booking_system.service.impl;
 
 import com.naitei.group3.movie_ticket_booking_system.converter.DtoConverter;
 import com.naitei.group3.movie_ticket_booking_system.dto.response.CinemaDTO;
+import com.naitei.group3.movie_ticket_booking_system.exception.ResourceNotFoundException;
 import com.naitei.group3.movie_ticket_booking_system.repository.CinemaRepository;
 import com.naitei.group3.movie_ticket_booking_system.service.CinemaService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,15 @@ public class CinemaServiceImpl implements CinemaService {
                 .map(DtoConverter::convertCinemaToDTO);
     }
 
+    @Override
     public List<String> getAllCities() {
         return cinemaRepository.findDistinctCities();
+    }
+
+    @Override
+    public CinemaDTO getCinemaById(Long id) {
+        return cinemaRepository.findById(id)
+                .map(DtoConverter::convertCinemaToDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("error.cinema.notfound: " + id));
     }
 }
