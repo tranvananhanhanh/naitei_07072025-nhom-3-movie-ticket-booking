@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 public interface MovieService {
 
     Page<MovieDTO> filterMovies(String keyword, Integer year, String genreName, Boolean isActive, Pageable pageable);
+    MovieDTO getMovieById(Long id);
 }
