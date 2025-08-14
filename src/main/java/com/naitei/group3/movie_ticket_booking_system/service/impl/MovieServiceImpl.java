@@ -1,8 +1,8 @@
 package com.naitei.group3.movie_ticket_booking_system.service.impl;
 
-import com.naitei.group3.movie_ticket_booking_system.converter.ConvertToDtos;
+import com.naitei.group3.movie_ticket_booking_system.converter.DtoConverter;
 import com.naitei.group3.movie_ticket_booking_system.dto.response.MovieDTO;
-import lombok.RequiredArgsConstructor;
+import com.naitei.group3.movie_ticket_booking_system.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,13 +24,13 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Page<MovieDTO> filterMovies(String keyword, Integer year, String genreName, Boolean isActive, Pageable pageable) {
         return movieRepository.filterMovies(keyword, year, genreName, isActive, pageable)
-                .map(ConvertToDtos::convertMovieToDTO);
+                .map(DtoConverter::convertMovieToDTO);
     }
 
     @Override
     public MovieDTO getMovieById(Long id) {
         Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Movie not found"));
-        return ConvertToDtos.convertMovieToDTO(movie);
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
+        return DtoConverter.convertMovieToDTO(movie);
     }
 }

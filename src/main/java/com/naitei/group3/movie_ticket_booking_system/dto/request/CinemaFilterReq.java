@@ -9,29 +9,22 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MovieFilterReq {
-
+public class CinemaFilterReq {
     private String keyword;
-    private Integer year;
-    private String genreName;
-    private Boolean isActive;
+    private String city;
 
     @PositiveOrZero
     private int page = 0;
 
     @Min(1) @Max(100)
-    private int size = 10;
+    private int size = 6;
 
     public void setKeyword(String keyword) {
         this.keyword = emptyToNull(keyword);
     }
 
-    public void setGenreName(String genreName) {
-        this.genreName = emptyToNull(genreName);
-    }
-
-    public void setIsActive(Boolean active) {
-        isActive = active;
+    public void setCity(String city) {
+        this.city = emptyToNull(city);
     }
 
     public void setPage(int page) {
@@ -39,7 +32,7 @@ public class MovieFilterReq {
     }
 
     public void setSize(int size) {
-        if (size < 1) size = 10;
+        if (size < 1) size = 6;
         if (size > 100) size = 100;
         this.size = size;
     }

@@ -1,13 +1,15 @@
 package com.naitei.group3.movie_ticket_booking_system.converter;
 
+import com.naitei.group3.movie_ticket_booking_system.dto.response.CinemaDTO;
 import com.naitei.group3.movie_ticket_booking_system.dto.response.MovieDTO;
 import com.naitei.group3.movie_ticket_booking_system.dto.response.ShowtimeDTO;
+import com.naitei.group3.movie_ticket_booking_system.entity.Cinema;
 import com.naitei.group3.movie_ticket_booking_system.entity.Movie;
 import com.naitei.group3.movie_ticket_booking_system.entity.Showtime;
 
 import java.util.stream.Collectors;
 
-public class ConvertToDtos {
+public class DtoConverter {
 
     public static MovieDTO convertMovieToDTO(Movie movie) {
         if (movie == null) return null;
@@ -23,6 +25,18 @@ public class ConvertToDtos {
                 .genres(movie.getGenres().stream()
                         .map(g -> g.getName())
                         .collect(Collectors.toSet()))
+                .build();
+    }
+
+    public static CinemaDTO convertCinemaToDTO(Cinema cinema) {
+        if (cinema == null) return null;
+
+        return CinemaDTO.builder()
+                .id(cinema.getId())
+                .name(cinema.getName())
+                .address(cinema.getAddress())
+                .city(cinema.getCity())
+                .mapUrl(cinema.getMapUrl())
                 .build();
     }
 
