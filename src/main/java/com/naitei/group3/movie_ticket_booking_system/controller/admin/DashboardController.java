@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController {
+public class DashboardController extends BaseAdminController{
 
     @GetMapping
     public String dashboard(Model model) {
 
         model.addAttribute("pageTitle", "Dashboard");
         model.addAttribute("ticketsToday", 0);
-        return "admin/dashboard";
+        return getAdminView("dashboard");
     }
 }
