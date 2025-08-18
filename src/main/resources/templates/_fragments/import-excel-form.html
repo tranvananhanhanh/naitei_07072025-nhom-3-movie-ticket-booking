@@ -1,0 +1,29 @@
+<div th:fragment="importExcelForm(actionUrl, backUrl, backLabel)">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data" th:action="${actionUrl}">
+                <div class="mb-3">
+                    <input type="file" id="fileInput" name="file" accept=".xlsx,.xls"
+                        class="form-control form-control-lg" th:aria-label="#{excel.upload.chooseFile}" />
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary fs-6" th:text="#{excel.upload.button}">Tải lên</button>
+                    <a th:href="${backUrl}" class="btn btn-secondary fs-6" th:text="${backLabel}">⬅ Trở về</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div th:if="${message}" class="alert mt-3"
+        style="font-size: 1.5rem; color: black; background-color: transparent; border: none;">
+        <span th:text="${message}"></span>
+    </div>
+    <div th:if="${excelErrors != null and !excelErrors.isEmpty()}" class="alert alert-danger mt-3">
+        <h4 class="alert-heading fs-4" th:text="#{excel.upload.error.title}">Danh sách lỗi</h4>
+        <ul class="mb-0 fs-5">
+            <li th:each="err : ${excelErrors}">
+                <span th:text="#{excel.upload.error.row}">Dòng</span>
+                <span th:text="${err.row}"></span>: <span th:text="${err.message}"></span>
+            </li>
+        </ul>
+    </div>
+</div>

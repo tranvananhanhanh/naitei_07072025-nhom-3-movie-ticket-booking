@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{_layouts/admin_layout :: layout(#{excel.upload.title.cinemas}, ~{::content})}">
+<div th:fragment="content">
+    <div class="container">
+        <div th:replace="~{_fragments/import-excel-form :: importExcelForm(
+            @{/admin/cinemas/upload},
+            @{/admin/cinemas},
+            #{excel.upload.back.cinemas}
+        )}"></div>
+    </div>
+</div>
+
+</html>
