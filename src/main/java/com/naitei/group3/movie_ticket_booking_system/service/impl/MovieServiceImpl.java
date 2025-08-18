@@ -11,7 +11,6 @@ import com.naitei.group3.movie_ticket_booking_system.service.MovieService;
 import com.naitei.group3.movie_ticket_booking_system.entity.Movie;
 //import java.util.function.Predicate;
 
-
 @Service
 public class MovieServiceImpl implements MovieService {
 
@@ -22,7 +21,8 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Page<MovieDTO> filterMovies(String keyword, Integer year, String genreName, Boolean isActive, Pageable pageable) {
+    public Page<MovieDTO> filterMovies(String keyword, Integer year, String genreName, Boolean isActive,
+            Pageable pageable) {
         return movieRepository.filterMovies(keyword, year, genreName, isActive, pageable)
                 .map(ConvertToDtos::convertMovieToDTO);
     }

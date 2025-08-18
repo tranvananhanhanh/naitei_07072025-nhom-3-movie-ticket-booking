@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{_layouts/admin_layout :: layout('Danh sách phim', ~{::content})}">
+    th:replace="~{_layouts/admin_layout :: layout('Danh sách phim', ~{::content})}">
 
 <div th:fragment="content">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="btn-group">
-            <a class="btn btn-outline-primary"     href="/admin/movies/import"      title="Nhập Excel thêm phim (placeholder)">Nhập Excel thêm phim</a>
-            <a class="btn btn-outline-danger"      href="/admin/movies/bulk-delete" title="Xóa đã chọn (placeholder)">Xóa đã chọn</a>
+            <a class="btn btn-outline-primary" href="/admin/movies/upload"
+                title="Nhập Excel thêm phim (placeholder)">Nhập Excel thêm phim</a>
+            <a class="btn btn-outline-danger" href="/admin/movies/bulk-delete" title="Xóa đã chọn (placeholder)">Xóa đã
+                chọn</a>
         </div>
     </div>
 
@@ -15,17 +17,14 @@
     <form method="get" th:action="@{/admin/movies}" class="mb-4">
         <div class="form-row">
             <div class="col-md-3 mb-2">
-                <input type="text" class="form-control" name="keyword"
-                       placeholder="Tìm theo tên hoặc mô tả"
-                       th:value="${keyword}">
+                <input type="text" class="form-control" name="keyword" placeholder="Tìm theo tên hoặc mô tả"
+                    th:value="${keyword}">
             </div>
             <div class="col-md-2 mb-2">
-                <input type="number" class="form-control" name="year" placeholder="Năm"
-                       th:value="${year}">
+                <input type="number" class="form-control" name="year" placeholder="Năm" th:value="${year}">
             </div>
             <div class="col-md-2 mb-2">
-                <input type="text" class="form-control" name="genreName" placeholder="Thể loại"
-                       th:value="${genreName}">
+                <input type="text" class="form-control" name="genreName" placeholder="Thể loại" th:value="${genreName}">
             </div>
             <div class="col-md-2 mb-2">
                 <select class="form-control" name="isActive">
@@ -48,7 +47,7 @@
 
                 <!-- Poster phim -->
                 <img th:src="@{${movie.poster}}" class="card-img-top" alt="Poster"
-                     style="height: 350px; object-fit: cover;">
+                    style="height: 350px; object-fit: cover;">
 
                 <!-- TTin -->
                 <div class="card-body">
@@ -60,12 +59,12 @@
                     </p>
                     <p class="mb-1">
                         <strong>Ngày chiếu:</strong>
-                        <span th:text="${movie.releaseDate != null ? #temporals.format(movie.releaseDate, 'dd/MM/yyyy') : ''}"></span>
+                        <span
+                            th:text="${movie.releaseDate != null ? #temporals.format(movie.releaseDate, 'dd/MM/yyyy') : ''}"></span>
                     </p>
                     <p class="mb-1">
                         <strong>Thể loại:</strong>
-                        <span th:each="g : ${movie.genres}"
-                              th:text="${g}" class="badge badge-info mr-1"></span>
+                        <span th:each="g : ${movie.genres}" th:text="${g}" class="badge badge-info mr-1"></span>
                     </p>
                     <p>
                         <span th:if="${movie.isActive}" class="badge badge-success">Đang chiếu</span>
@@ -78,9 +77,9 @@
                     <a th:href="@{'/admin/movies/' + ${movie.id}}" class="btn btn-danger btn-sm">Xem phim</a>
                     <div>
                         <a th:href="@{'/admin/movies/' + ${movie.id} + '/edit'}"
-                           class="btn btn-outline-primary btn-sm mr-1" title="Sửa (placeholder)">Sửa</a>
-                        <a th:href="@{'/admin/movies/' + ${movie.id} + '/delete'}"
-                           class="btn btn-outline-danger btn-sm" title="Xoá (placeholder)">Xoá</a>
+                            class="btn btn-outline-primary btn-sm mr-1" title="Sửa (placeholder)">Sửa</a>
+                        <a th:href="@{'/admin/movies/' + ${movie.id} + '/delete'}" class="btn btn-outline-danger btn-sm"
+                            title="Xoá (placeholder)">Xoá</a>
                     </div>
                 </div>
             </div>
@@ -97,22 +96,21 @@
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/admin/movies(page=${currentPage - 1}, keyword=${keyword}, year=${year}, genreName=${genreName}, isActive=${isActive})}">
+                    th:href="@{/admin/movies(page=${currentPage - 1}, keyword=${keyword}, year=${year}, genreName=${genreName}, isActive=${isActive})}">
                     Trước
                 </a>
             </li>
 
-            <li class="page-item"
-                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
                 th:classappend="${i == currentPage} ? 'active'">
                 <a class="page-link"
-                   th:href="@{/admin/movies(page=${i}, keyword=${keyword}, year=${year}, genreName=${genreName}, isActive=${isActive})}"
-                   th:text="${i + 1}"></a>
+                    th:href="@{/admin/movies(page=${i}, keyword=${keyword}, year=${year}, genreName=${genreName}, isActive=${isActive})}"
+                    th:text="${i + 1}"></a>
             </li>
 
             <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
                 <a class="page-link"
-                   th:href="@{/admin/movies(page=${currentPage + 1}, keyword=${keyword}, year=${year}, genreName=${genreName}, isActive=${isActive})}">
+                    th:href="@{/admin/movies(page=${currentPage + 1}, keyword=${keyword}, year=${year}, genreName=${genreName}, isActive=${isActive})}">
                     Sau
                 </a>
             </li>
@@ -120,4 +118,5 @@
     </nav>
 
 </div>
+
 </html>

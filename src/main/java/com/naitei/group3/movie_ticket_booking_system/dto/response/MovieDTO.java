@@ -7,13 +7,12 @@ import java.util.Set;
 
 @Builder
 public record MovieDTO(
-        Long id,
-        String name,
-        String description,
-        Integer duration,
-        String poster,
-        LocalDate releaseDate,
-        Boolean isActive,
-        Set<String>genres
-) {
+                Long id,
+                String name,
+                String description,
+                Integer duration,
+                String poster,
+                LocalDate releaseDate,
+                Boolean isActive,
+                Set<String> genres) {
 }

@@ -1,25 +1,39 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{_layouts/admin_layout :: layout('Tải lên file Excel phim', ~{::content})}">
 
-<head>
-    <meta charset="UTF-8">
-    <title>Tải lên file phim</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-gray-100">
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-4">Tải lên file Excel phim</h1>
-        <form method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded shadow-md">
-            <div class="mb-4">
-                <label for="fileInput" class="block text-gray-700">Chọn file Excel</label>
-                <input type="file" id="fileInput" name="file" accept=".xlsx,.xls"
-                    class="mt-1 block w-full border rounded p-2" />
+<div th:fragment="content">
+    <div class="container">
+        <!-- Form tải lên file -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" th:action="@{/admin/movies/upload}">
+                    <div class="mb-3">
+                        <input type="file" id="fileInput" name="file" accept=".xlsx,.xls" class="form-control form-control-lg" />
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-primary  fs-6">Tải lên</button>
+                        <a th:href="@{/admin/movies}" class="btn btn-secondary fs-6">⬅ Trở về danh sách phim</a>
+                    </div>
+                </form>
             </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Tải lên</button>
-            <p th:class="${messageClass}" th:text="${message}" class="mt-4"></p>
-        </form>
+        </div>
+
+       <!-- Thông báo không màu -->
+<div th:if="${message}" class="alert mt-3" style="font-size: 1.5rem; color: black; background-color: transparent; border: none;">
+    <span th:text="${message}"></span>
+</div>
+
+        <!-- Danh sách lỗi Excel -->
+        <div th:if="${excelErrors != null and !excelErrors.isEmpty()}" class="alert alert-danger mt-3">
+            <h4 class="alert-heading fs-4">Danh sách lỗi</h4>
+            <ul class="mb-0 fs-5">
+                <li th:each="err : ${excelErrors}">
+                    Dòng <span th:text="${err.row}"></span>: <span th:text="${err.message}"></span>
+                </li>
+            </ul>
+        </div>
     </div>
-</body>
+</div>
 
 </html>
