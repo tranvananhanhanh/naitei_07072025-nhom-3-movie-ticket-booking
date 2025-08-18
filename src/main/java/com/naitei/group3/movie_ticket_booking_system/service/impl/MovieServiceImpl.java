@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.naitei.group3.movie_ticket_booking_system.repository.MovieRepository;
 import com.naitei.group3.movie_ticket_booking_system.service.MovieService;
-
+import com.naitei.group3.movie_ticket_booking_system.entity.Movie;
 //import java.util.function.Predicate;
 
 
@@ -22,5 +22,12 @@ public class MovieServiceImpl implements MovieService {
     public Page<MovieDTO> filterMovies(String keyword, Integer year, String genreName, Boolean isActive, Pageable pageable) {
         return movieRepository.filterMovies(keyword, year, genreName, isActive, pageable)
                 .map(ConvertToDtos::convertMovieToDTO);
+    }
+
+    @Override
+    public MovieDTO getMovieById(Long id) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+        return ConvertToDtos.convertMovieToDTO(movie);
     }
 }

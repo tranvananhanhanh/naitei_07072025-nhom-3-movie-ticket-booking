@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{_layouts/admin_layout :: layout(${movie.name}, ~{::content})}">
+
+
+<div th:fragment="content">
+
+
+    <div class="row">
+
+        <!-- Poster -->
+        <div class="col-md-4">
+            <img th:src="@{${movie.poster}}" alt="Poster" class="img-fluid rounded shadow">
+        </div>
+
+
+        <!-- Thông tin -->
+        <div class="col-md-8">
+            <p><strong>Thời lượng:</strong> <span th:text="${movie.duration} + ' phút'"></span></p>
+            <p><strong>Ngày chiếu:</strong> <span th:text="${#temporals.format(movie.releaseDate, 'dd/MM/yyyy')}"></span></p>
+            <p><strong>Thể loại:</strong>
+                <span class="badge badge-info mr-1" th:each="g : ${movie.genres}" th:text="${g}"></span>
+            </p>
+            <p><strong>Trạng thái:</strong>
+                <span th:if="${movie.isActive}" class="badge badge-success">Đang chiếu</span>
+                <span th:unless="${movie.isActive}" class="badge badge-danger">Ngưng chiếu</span>
+            </p>
+            <p><strong>Mô tả:</strong></p>
+            <p th:text="${movie.description}"></p>
+
+            <div class="d-flex mt-3">
+                <a th:href="@{'/admin/movies/' + ${movie.id} + '/edit'}"
+                   class="btn btn-outline-primary btn-sm mr-1" title="Sửa (placeholder)">Sửa</a>
+                <a th:href="@{'/admin/movies/' + ${movie.id} + '/delete'}"
+                   class="btn btn-outline-danger btn-sm" title="Xóa (placeholder)">Xoá</a>
+            </div>
+
+            <a th:href="@{/admin/movies}" class="btn btn-secondary mt-3">⬅ Quay lại danh sách</a>
+        </div>
+
+    </div>
+
+</div>
+</html>
+
+
+</html>

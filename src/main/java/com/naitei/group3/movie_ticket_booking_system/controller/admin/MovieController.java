@@ -10,38 +10,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import com.naitei.group3.movie_ticket_booking_system.service.MovieService;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 @RequiredArgsConstructor
 public class MovieController extends BaseAdminController{
 
     private final MovieService movieService;
-
-//    @GetMapping("/admin/movies")
-//    public String listMovies(
-//            @RequestParam(required = false) String keyword,
-//            @RequestParam(required = false) Integer year,
-//            @RequestParam(required = false) String genreName,
-//            @RequestParam(required = false) Boolean isActive,
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size,
-//            Model model
-//    ) {
-//        // tạo pageable
-//        PageRequest pageable = PageRequest.of(page, size);
-//
-//        Page<MovieDTO> movies = movieService.filterMovies(keyword, year, genreName, isActive, pageable);
-//
-//        model.addAttribute("movies", movies);
-//        model.addAttribute("currentPage", page);
-//        model.addAttribute("totalPages", movies.getTotalPages());
-//        model.addAttribute("keyword", keyword);
-//        model.addAttribute("year", year);
-//        model.addAttribute("genreName", genreName);
-//        model.addAttribute("isActive", isActive);
-//
-//        return getAdminView("movies/index");
-//    }
 
     @GetMapping("/admin/movies")
     public String listMovies(
@@ -60,5 +35,13 @@ public class MovieController extends BaseAdminController{
         model.addAttribute("genreName", filter.getGenreName());
         model.addAttribute("isActive", filter.getIsActive());
         return getAdminView("movies/index");
+    }
+
+    @GetMapping("/admin/movies/{id}")
+    public String getMovieDetail(@PathVariable Long id, Model model) {
+        MovieDTO movie = movieService.getMovieById(id);
+        model.addAttribute("movie", movie);
+
+        return getAdminView("movies/show");
     }
 }
