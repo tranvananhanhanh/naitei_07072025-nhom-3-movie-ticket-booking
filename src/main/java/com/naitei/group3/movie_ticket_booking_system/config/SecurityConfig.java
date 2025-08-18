@@ -8,34 +8,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		// Phân quyền
-		http
-			.authorizeHttpRequests(auth -> auth
-					.requestMatchers("/", "/public/**", "/css/**", "/js/**", "/vendor/**", "/img/**", "/auth/**", "/api/v1/auth/**").permitAll()
-					.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-					.requestMatchers("/admin/**").hasRole("ADMIN")
-					.requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-					.anyRequest().authenticated()
-				)
-				// Xác thực
-				.formLogin(withDefaults())
-				.httpBasic(withDefaults());
-		return http.build();
-	}
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().permitAll() // 🔑 Cho phép tất cả request, không cần đăng nhập
+            )
+            .csrf(csrf -> csrf.disable()) // Tắt CSRF để test API cho tiện
+            .formLogin(form -> form.disable()) // Không hiện form login mặc định
+            .httpBasic(httpBasic -> httpBasic.disable()); // Không bật Basic Auth
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+        return http.build();
+    }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
-

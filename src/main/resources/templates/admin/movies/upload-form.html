@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tải lên file phim</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">Tải lên file Excel phim</h1>
+        <form method="POST" enctype="multipart/form-data" class="bg-white p-6 rounded shadow-md">
+            <div class="mb-4">
+                <label for="fileInput" class="block text-gray-700">Chọn file Excel</label>
+                <input type="file" id="fileInput" name="file" accept=".xlsx,.xls"
+                    class="mt-1 block w-full border rounded p-2" />
+            </div>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Tải lên</button>
+            <p th:class="${messageClass}" th:text="${message}" class="mt-4"></p>
+        </form>
+    </div>
+</body>
+
+</html>
