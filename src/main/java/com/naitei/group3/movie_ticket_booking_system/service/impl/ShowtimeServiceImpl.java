@@ -34,24 +34,32 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     public Page<ShowtimeDTO> filterShowtime(ShowtimeFilterReq filter, Pageable pageable) {
+        Integer statusValue = null;
+        if (filter.getStatus() != null) {
+            int value = filter.getStatus().getValue();
+            // Validate status hợp lệ (giả sử chỉ có -1, 0, 1 là hợp lệ)
+            if (value != -1 && value != 0 && value != 1) {
+                throw new IllegalArgumentException("Invalid status value: " + value);
+            }
+            statusValue = value;
+        }
+
         return showtimeRepository.filterShowtimes(
                 filter.getKeyword(),
                 filter.getCinemaName(),
-                filter.getStatus(),
+                statusValue,
                 filter.getShowDate(),
-                pageable
-        ).map(s -> {
-            Long paidSeats = this.getNumOfBookedSeats(s.getId());
-            return DtoConverter.convertShowtimeToDTO(s, paidSeats);
-        });
+                pageable).map(s -> {
+                    Long paidSeats = this.getNumOfBookedSeats(s.getId());
+                    return DtoConverter.convertShowtimeToDTO(s, paidSeats);
+                });
     }
 
     @Override
     public ShowtimeDTO getShowtimeById(Long id) {
         Showtime showtime = showtimeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        messageUtil.getMessage("error.showtime.notfound", id)
-                ));
+                        messageUtil.getMessage("error.showtime.notfound", id)));
         return DtoConverter.convertShowtimeToDTO(showtime, this.getNumOfBookedSeats(showtime.getId()));
     }
 }

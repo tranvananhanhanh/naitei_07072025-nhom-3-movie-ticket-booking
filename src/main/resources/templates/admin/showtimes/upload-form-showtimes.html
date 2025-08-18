@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+    th:replace="~{_layouts/admin_layout :: layout(#{excel.upload.title.showtimes}, ~{::content})}">
+
+<div th:fragment="content">
+    <div class="container">
+        <div th:replace="~{_fragments/import-excel-form :: importExcelForm(
+            @{/admin/showtimes/upload},
+            @{/admin/showtimes},
+            #{excel.upload.back.showtimes}
+        )}"></div>
+    </div>
+</div>
+
+</html>
