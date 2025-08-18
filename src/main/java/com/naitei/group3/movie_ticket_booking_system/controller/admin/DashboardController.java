@@ -16,4 +16,5 @@ public class DashboardController extends BaseAdminController{
         model.addAttribute("ticketsToday", 0);
         return getAdminView("dashboard");
     }
+
 }
