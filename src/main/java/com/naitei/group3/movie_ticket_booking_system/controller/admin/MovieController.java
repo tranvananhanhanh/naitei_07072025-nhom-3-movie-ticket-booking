@@ -22,10 +22,9 @@ import com.naitei.group3.movie_ticket_booking_system.dto.response.*;
 import com.naitei.group3.movie_ticket_booking_system.exception.ExcelValidationException;
 import com.naitei.group3.movie_ticket_booking_system.service.MovieService;
 import com.naitei.group3.movie_ticket_booking_system.service.impl.ExcelMovieServiceImpl;
-
 import java.util.List;
 
-@Controller
+@Controller("adminMovieController")
 @RequestMapping("/admin/movies")
 public class MovieController extends BaseAdminController {
 
