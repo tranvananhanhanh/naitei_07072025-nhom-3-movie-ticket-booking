@@ -10,14 +10,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/admin/showtimes")
 public class ShowtimeController extends BaseAdminController {
 
     private final ShowtimeService service;
 
-    @GetMapping("/admin/showtimes")
+    @GetMapping
     public String showTimes(
             @ModelAttribute ShowtimeFilterReq filter,
             Model model) {
@@ -30,5 +36,12 @@ public class ShowtimeController extends BaseAdminController {
         model.addAttribute("filter", filter);
 
         return getAdminView("showtimes/index");
+    }
+
+    @GetMapping("/{id}")
+    public String getShowtimeDetail(@PathVariable Long id, Model model) {
+        ShowtimeDTO showtime = service.getShowtimeById(id);
+        model.addAttribute("showtime", showtime);
+        return getAdminView("showtimes/show");
     }
 }

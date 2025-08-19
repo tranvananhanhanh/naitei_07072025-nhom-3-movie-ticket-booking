@@ -13,4 +13,11 @@ public enum ShowtimeStatus {
     ShowtimeStatus(int value) {
         this.value = value;
     }
+
+    public static ShowtimeStatus fromValue(int value) {
+        for (ShowtimeStatus status : values()) {
+            if (status.value == value) return status;
+        }
+        throw new IllegalArgumentException("Invalid status: " + value);
+    }
 }

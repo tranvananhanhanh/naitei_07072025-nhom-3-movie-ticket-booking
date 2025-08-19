@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <!-- Bộ lọc -->
+    <!-- filter -->
     <form method="get" th:action="@{/admin/showtimes}" class="mb-4">
         <div class="form-row">
             <div class="col-md-3 mb-2">
@@ -33,9 +33,15 @@
             <div class="col-md-2 mb-2">
                 <select class="form-control" name="status">
                     <option value="" th:selected="${filter.status == null}" th:text="#{status.all}"></option>
-                    <option th:value="0" th:selected="${filter.status == 0}" th:text="#{status.available}"></option>
-                    <option th:value="1" th:selected="${filter.status == 1}" th:text="#{status.finished}"></option>
-                    <option th:value="-1" th:selected="${filter.status == -1}" th:text="#{status.cancelled}"></option>
+                    <option th:value="AVAILABLE"
+                            th:selected="${filter.status == T(com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus).AVAILABLE}"
+                            th:text="#{status.available}"></option>
+                    <option th:value="FINISHED"
+                            th:selected="${filter.status == T(com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus).FINISHED}"
+                            th:text="#{status.finished}"></option>
+                    <option th:value="CANCELLED"
+                            th:selected="${filter.status == T(com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus).CANCELLED}"
+                            th:text="#{status.cancelled}"></option>
                 </select>
             </div>
             <div class="col-md-4 mb-2">
@@ -45,7 +51,7 @@
         </div>
     </form>
 
-    <!-- Danh sách showtime -->
+    <!-- List showtime -->
     <table class="table table-striped">
         <thead>
         <tr>
@@ -63,21 +69,24 @@
         </thead>
         <tbody>
         <tr th:each="showtime : ${showtimes}">
-            <td th:text="${showtime.movieName}"></td>
+            <td th:text="${showtime.movie.name}"></td>
             <td th:text="${#temporals.format(showtime.date, 'dd/MM/yyyy')}"></td>
             <td th:text="${#temporals.format(showtime.startTime, 'HH:mm')}"></td>
             <td th:text="${#temporals.format(showtime.endTime, 'HH:mm')}"></td>
-            <td th:text="${showtime.cinemaName}"></td>
-            <td th:text="${showtime.hallName}"></td>
+            <td th:text="${showtime.hall.cinema.name}"></td>
+            <td th:text="${showtime.hall.name}"></td>
             <td th:text="${#numbers.formatDecimal(showtime.price, 0, 'POINT', 0, 'COMMA')}"></td>
             <td>
                 <span th:text="${showtime.paidSeats}"></span> /
-                <span th:text="${showtime.totalSeats}"></span>
+                <span th:text="${showtime.hall.totalSeats}"></span>
             </td>
             <td>
-                <span th:if="${showtime.status == 1}" class="badge badge-warning" th:text="#{status.finished}"></span>
-                <span th:if="${showtime.status == 0}" class="badge badge-success" th:text="#{status.available}"></span>
-                <span th:if="${showtime.status == -1}" class="badge badge-danger" th:text="#{status.cancelled}"></span>
+                <span th:if="${showtime.status == T(com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus).FINISHED}"
+                      class="badge badge-warning" th:text="#{status.finished}"></span>
+                <span th:if="${showtime.status == T(com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus).AVAILABLE}"
+                      class="badge badge-success" th:text="#{status.available}"></span>
+                <span th:if="${showtime.status == T(com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus).CANCELLED}"
+                      class="badge badge-danger" th:text="#{status.cancelled}"></span>
             </td>
             <td>
                 <a th:href="@{'/admin/showtimes/' + ${showtime.id}}" class="btn btn-info btn-sm" th:text="#{button.view}"></a>
@@ -90,12 +99,12 @@
         </tbody>
     </table>
 
-    <!-- Nếu không có -->
+    <!-- is empty -->
     <div class="alert alert-light text-center" th:if="${showtimes.isEmpty()}" th:text="#{alert.noShowtime}">
     </div>
 
-    <!-- Phân trang -->
-    <nav th:if="${showtimes.totalPages   > 1}">
+    <!-- paging -->
+    <nav th:if="${showtimes.totalPages > 1}">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${filter.page == 0} ? 'disabled'">
                 <a class="page-link"

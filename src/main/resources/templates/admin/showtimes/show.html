@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{_layouts/admin_layout :: layout(${#temporals.format(showtime.date, 'dd/MM/yyyy')} + ' - '
+    + ${#temporals.format(showtime.startTime, 'HH:mm')} + ' ~ '
+    + ${#temporals.format(showtime.endTime, 'HH:mm')} + ' - ' + ${showtime.movie.name}, ~{::content})}">
+
+<div th:fragment="content">
+
+    <div class="row">
+
+        <!-- Poster -->
+        <div class="col-md-4">
+            <img th:src="@{${showtime.movie.poster}}" alt="Poster" class="img-fluid rounded shadow">
+        </div>
+
+        <div class="col-md-10 col-lg-8">
+
+            <!-- title -->
+            <div class="d-flex align-items-center mb-3">
+                <h4 class="mb-0">
+                    <a th:href="@{'/admin/movies/' + ${showtime.movie.id}}"
+                       class="text-dark"
+                       th:text="${showtime.movie.name}">
+                    </a>
+                </h4>
+                <div class="ml-3">
+                    <span th:if="${showtime.status == T(com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus).FINISHED}"
+                          class="badge badge-warning"
+                          th:text="#{status.finished}"></span>
+                    <span th:if="${showtime.status == T(com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus).AVAILABLE}"
+                          class="badge badge-success"
+                          th:text="#{status.available}"></span>
+                    <span th:if="${showtime.status == T(com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus).CANCELLED}"
+                          class="badge badge-danger"
+                          th:text="#{status.cancelled}"></span>
+                </div>
+            </div>
+
+            <!-- details -->
+            <p><strong th:text="#{table.date}">Ngày</strong>:
+                <span th:text="${#temporals.format(showtime.date, 'dd/MM/yyyy')}"></span>
+            </p>
+            <p><strong th:text="#{table.start}">Bắt đầu</strong>:
+                <span th:text="${#temporals.format(showtime.startTime, 'HH:mm')}"></span>
+            </p>
+            <p><strong th:text="#{table.end}">Kết thúc</strong>:
+                <span th:text="${#temporals.format(showtime.endTime, 'HH:mm')}"></span>
+            </p>
+            <p>
+                <strong th:text="#{table.cinema}">Rạp</strong>:
+                <a th:href="@{'/admin/cinemas/' + ${showtime.hall.cinema.id}}"
+                   class="link-primary text-decoration-underline"
+                   th:text="${showtime.hall.cinema.name}">
+                </a>
+            </p>
+
+            <p>
+                <strong th:text="#{table.hall}">Phòng</strong>:
+                <a th:href="@{'/admin/cinemas/' + ${showtime.hall.cinema.id} + '/halls/' + ${showtime.hall.id}}"
+                   class="link-primary text-decoration-underline"
+                   th:text="${showtime.hall.name}">
+                </a>
+            </p>
+            <p><strong th:text="#{table.price}">Giá vé</strong>:
+                <span th:text="${#numbers.formatDecimal(showtime.price, 0, 'POINT', 0, 'COMMA')}"></span>
+            </p>
+            <p><strong th:text="#{table.bookedSeats}">Ghế đã đặt</strong>:
+                <span th:text="${showtime.paidSeats}"></span> /
+                <span th:text="${showtime.hall.totalSeats}"></span>
+            </p>
+
+            <!-- Actions -->
+            <div class="d-flex mt-3">
+                <a th:href="@{'/admin/showtimes/' + ${showtime.id} + '/edit'}"
+                   class="btn btn-outline-primary btn-lg mr-2" th:text="#{button.edit}"></a>
+                <a th:href="@{'/admin/showtimes/' + ${showtime.id} + '/delete'}"
+                   class="btn btn-outline-danger btn-lg" th:text="#{button.delete}"></a>
+            </div>
+
+            <!-- back btn -->
+            <a th:href="@{/admin/showtimes}" class="btn btn-secondary mt-3 btn-lg">
+                <span th:text="#{button.back}"></span>
+            </a>
+        </div>
+    </div>
+
+</div>
+</html>
