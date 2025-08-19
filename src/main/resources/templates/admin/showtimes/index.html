@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{_layouts/admin_layout :: layout(#{showtimes.title}, ~{::content})}">
+
+<div th:fragment="content">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="btn-group">
+            <a class="btn btn-success" th:href="@{/admin/showtimes/upload}"
+               th:title="#{button.add}" th:text="#{button.add}"></a>
+            <a class="btn btn-outline-secondary" href="/admin/showtimes/export"
+               th:title="#{button.export}" th:text="#{button.export}"></a>
+        </div>
+    </div>
+
+    <!-- Bộ lọc -->
+    <form method="get" th:action="@{/admin/showtimes}" class="mb-4">
+        <div class="form-row">
+            <div class="col-md-3 mb-2">
+                <input type="text" class="form-control" name="keyword"
+                       th:placeholder="#{placeholder.searchMovie}"
+                       th:value="${filter.keyword}">
+            </div>
+            <div class="col-md-2 mb-2">
+                <input type="date" class="form-control" name="showDate"
+                       th:value="${filter.showDate}">
+            </div>
+            <div class="col-md-3 mb-2">
+                <input type="text" class="form-control" name="cinemaName"
+                       th:placeholder="#{placeholder.cinemaName}"
+                       th:value="${filter.cinemaName}">
+            </div>
+            <div class="col-md-2 mb-2">
+                <select class="form-control" name="status">
+                    <option value="" th:selected="${filter.status == null}" th:text="#{status.all}"></option>
+                    <option th:value="0" th:selected="${filter.status == 0}" th:text="#{status.available}"></option>
+                    <option th:value="1" th:selected="${filter.status == 1}" th:text="#{status.finished}"></option>
+                    <option th:value="-1" th:selected="${filter.status == -1}" th:text="#{status.cancelled}"></option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-2">
+                <button type="submit" class="btn btn-primary" th:text="#{button.filter}"></button>
+                <a th:href="@{/admin/showtimes}" class="btn btn-secondary" th:text="#{button.reset}"></a>
+            </div>
+        </div>
+    </form>
+
+    <!-- Danh sách showtime -->
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th style="width: 210px;" th:text="#{table.movie}"></th>
+            <th th:text="#{table.date}"></th>
+            <th th:text="#{table.start}"></th>
+            <th th:text="#{table.end}"></th>
+            <th th:text="#{table.cinema}"></th>
+            <th th:text="#{table.hall}"></th>
+            <th th:text="#{table.price}"></th>
+            <th th:text="#{table.bookedSeats}"></th>
+            <th th:text="#{table.status}"></th>
+            <th style="width: 165px;" th:text="#{table.actions}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="showtime : ${showtimes}">
+            <td th:text="${showtime.movieName}"></td>
+            <td th:text="${#temporals.format(showtime.date, 'dd/MM/yyyy')}"></td>
+            <td th:text="${#temporals.format(showtime.startTime, 'HH:mm')}"></td>
+            <td th:text="${#temporals.format(showtime.endTime, 'HH:mm')}"></td>
+            <td th:text="${showtime.cinemaName}"></td>
+            <td th:text="${showtime.hallName}"></td>
+            <td th:text="${#numbers.formatDecimal(showtime.price, 0, 'POINT', 0, 'COMMA')}"></td>
+            <td>
+                <span th:text="${showtime.paidSeats}"></span> /
+                <span th:text="${showtime.totalSeats}"></span>
+            </td>
+            <td>
+                <span th:if="${showtime.status == 1}" class="badge badge-warning" th:text="#{status.finished}"></span>
+                <span th:if="${showtime.status == 0}" class="badge badge-success" th:text="#{status.available}"></span>
+                <span th:if="${showtime.status == -1}" class="badge badge-danger" th:text="#{status.cancelled}"></span>
+            </td>
+            <td>
+                <a th:href="@{'/admin/showtimes/' + ${showtime.id}}" class="btn btn-info btn-sm" th:text="#{button.view}"></a>
+                <a th:href="@{'/admin/showtimes/' + ${showtime.id} + '/edit'}"
+                   class="btn btn-outline-primary btn-sm" th:text="#{button.edit}"></a>
+                <a th:href="@{'/admin/showtimes/' + ${showtime.id} + '/delete'}"
+                   class="btn btn-outline-danger btn-sm" th:text="#{button.delete}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Nếu không có -->
+    <div class="alert alert-light text-center" th:if="${showtimes.isEmpty()}" th:text="#{alert.noShowtime}">
+    </div>
+
+    <!-- Phân trang -->
+    <nav th:if="${showtimes.totalPages   > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${filter.page == 0} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/admin/showtimes(page=${filter.page - 1}, keyword=${filter.keyword}, cinemaName=${filter.cinemaName}, status=${filter.status})}"
+                   th:text="#{pagination.prev}"></a>
+            </li>
+
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, showtimes.totalPages - 1)}"
+                th:classappend="${i == filter.page} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/admin/showtimes(page=${i}, keyword=${filter.keyword}, cinemaName=${filter.cinemaName}, status=${filter.status})}"
+                   th:text="${i + 1}"></a>
+            </li>
+
+            <li class="page-item" th:classappend="${filter.page + 1 >= showtimes.totalPages} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/admin/showtimes(page=${filter.page + 1}, keyword=${filter.keyword}, cinemaName=${filter.cinemaName}, status=${filter.status})}"
+                   th:text="#{pagination.next}"></a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+</html>
