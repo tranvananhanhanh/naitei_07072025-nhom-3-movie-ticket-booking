@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.naitei.group3.movie_ticket_booking_system.repository.GenreRepository;
 import com.naitei.group3.movie_ticket_booking_system.repository.MovieRepository;
 import com.naitei.group3.movie_ticket_booking_system.service.ExcelService;
-import com.naitei.group3.movie_ticket_booking_system.helper.ExcelHelper;
+import com.naitei.group3.movie_ticket_booking_system.helper.ExcelMovieHelper;
 import com.naitei.group3.movie_ticket_booking_system.entity.Movie;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ExcelMovieServiceImpl implements ExcelService  {
+public class ExcelMovieServiceImpl implements ExcelService {
 
     private static final Logger log = LoggerFactory.getLogger(ExcelMovieServiceImpl.class);
 
@@ -31,7 +31,7 @@ public class ExcelMovieServiceImpl implements ExcelService  {
     @Transactional(rollbackFor = Exception.class) // rollback cho cả checked + unchecked
     public void save(MultipartFile file) {
         try {
-            List<Movie> movies = ExcelHelper.excelToMovies(file.getInputStream(), genreRepository);
+            List<Movie> movies = ExcelMovieHelper.excelToMovies(file.getInputStream(), genreRepository);
             movieRepository.saveAll(movies);
         } catch (IOException e) {
             log.error("Lỗi khi đọc file Excel: {}", e.getMessage(), e);

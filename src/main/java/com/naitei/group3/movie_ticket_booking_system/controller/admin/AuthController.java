@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/auth")
 public class AuthController {
   private final UserService userService;
-  
+
   public AuthController(UserService userService) {
     this.userService = userService;
   }
@@ -38,8 +38,7 @@ public class AuthController {
     UserResponseDTO responseDTO = new UserResponseDTO(
         savedUser.getId(),
         savedUser.getName(),
-        savedUser.getRole().getName()
-    );
+        savedUser.getRole().getName());
 
     return ResponseEntity.ok(responseDTO);
   }

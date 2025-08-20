@@ -14,12 +14,16 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.naitei.group3.movie_ticket_booking_system.dto.request.MovieFilterReq;
 import com.naitei.group3.movie_ticket_booking_system.dto.response.MovieDTO;
+import com.naitei.group3.movie_ticket_booking_system.dto.response.*;
+import com.naitei.group3.movie_ticket_booking_system.exception.ExcelValidationException;
 import com.naitei.group3.movie_ticket_booking_system.service.MovieService;
-import org.springframework.web.bind.annotation.PathVariable;
 import com.naitei.group3.movie_ticket_booking_system.service.impl.ExcelMovieServiceImpl;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin/movies")
@@ -36,23 +40,25 @@ public class MovieController extends BaseAdminController {
         this.movieService = movieService;
     }
 
-    // Trang upload chỉ nhận /admin/movies/upload (GET)
     @GetMapping("/upload")
     public String showUploadPage(Model model) {
         if (!model.containsAttribute("message")) {
             model.addAttribute("message", "");
             model.addAttribute("messageClass", "");
         }
+        if (!model.containsAttribute("excelErrors")) {
+            model.addAttribute("excelErrors", null);
+        }
         return "admin/movies/upload-form";
     }
 
-    // Xử lý upload chỉ nhận /admin/movies/upload (POST)
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
         String validationMsg = validateFile(file);
         if (validationMsg != null) {
             model.addAttribute("message", validationMsg);
             model.addAttribute("messageClass", "text-red-500");
+            model.addAttribute("excelErrors", null);
             return "admin/movies/upload-form";
         }
 
@@ -62,16 +68,24 @@ public class MovieController extends BaseAdminController {
             logger.info("Đã tải lên thành công file: {}", fileName);
             model.addAttribute("message", String.format("Tải file thành công: %s", fileName));
             model.addAttribute("messageClass", "text-green-500");
+            model.addAttribute("excelErrors", null);
+            return "admin/movies/upload-form";
+        } catch (ExcelValidationException ex) {
+            List<ExcelErrorDTO> errorList = ex.getErrors();
+            logger.warn("File Excel hợp lệ hóa thất bại: {} lỗi", errorList.size());
+            model.addAttribute("message", String.format("Có %d lỗi khi nhập file!", errorList.size()));
+            model.addAttribute("messageClass", "text-red-500");
+            model.addAttribute("excelErrors", errorList);
             return "admin/movies/upload-form";
         } catch (Exception e) {
             logger.error("Lỗi khi xử lý file Excel: {}", fileName, e);
             model.addAttribute("message", "Lỗi khi tải file: " + e.getMessage());
             model.addAttribute("messageClass", "text-red-500");
+            model.addAttribute("excelErrors", null);
             return "admin/movies/upload-form";
         }
     }
 
-    // Trang danh sách phim chỉ nhận /admin/movies (GET)
     @GetMapping
     public String listMovies(
             @ModelAttribute MovieFilterReq filter,
@@ -96,7 +110,6 @@ public class MovieController extends BaseAdminController {
         return getAdminView("movies/show");
     }
 
-    // Đặt private method ở cuối class
     private String validateFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             logger.warn("Không có file được tải lên");
