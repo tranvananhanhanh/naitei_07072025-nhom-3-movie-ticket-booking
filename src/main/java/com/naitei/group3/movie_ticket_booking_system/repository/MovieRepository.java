@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.naitei.group3.movie_ticket_booking_system.entity.Movie;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long>, JpaSpecificationExecutor<Movie> {
@@ -28,4 +29,12 @@ public interface MovieRepository extends JpaRepository<Movie, Long>, JpaSpecific
             @Param("isActive") Boolean isActive,
             Pageable pageable
     );
+
+    @Query("""
+        SELECT DISTINCT m
+        FROM Movie m
+        JOIN m.showtimes s
+        WHERE s.status = :status
+    """)
+    Page<Movie> findMoviesByShowtimeStatus(@Param("status") int status, Pageable pageable);
 }
