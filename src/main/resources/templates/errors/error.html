@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{_layouts/admin_layout :: layout(${statusCode} + ' - ' + ${title}, ~{::content})}">
+
+<div th:fragment="content">
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 font-weight-bold"
+                th:classappend="${statusCode == 500} ? ' text-danger' :
+                                (${statusCode == 401} ? ' text-warning' :
+                                (${statusCode == 403} ? ' text-info' : ' text-secondary'))">
+                [[${statusCode}]]
+            </h1>
+
+            <p class="lead">[[${title}]]</p>
+            <p th:text="${errorMessage}"></p>
+
+            <a th:href="@{${redirectUrl}}" class="btn btn-primary mt-3">
+                [[${buttonLabel}]]
+            </a>
+        </div>
+    </div>
+</div>
+</html>
