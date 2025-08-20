@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{_layouts/admin_layout :: layout(#{cinema.list.title}, ~{::content})}">
+
+<div th:fragment="content">
+
+    <!-- Thêm rạp -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a th:href="@{/admin/cinemas/add}" class="btn btn-success">
+            <i class="fa fa-plus mr-1"></i> <span th:text="#{cinema.add}">Thêm rạp</span>
+        </a>
+    </div>
+
+    <!-- Lọc theo yêu cầu -->
+    <form method="get" th:action="@{/admin/cinemas}" class="mb-4">
+        <div class="form-row">
+            <!-- Tìm theo name or address -->
+            <div class="col-md-5 mb-2">
+                <input type="text"
+                       class="form-control"
+                       name="keyword"
+                       th:placeholder="#{cinema.search.placeholder}"
+                       th:value="${filter.keyword}">
+            </div>
+
+            <!-- Tỉnh/Thành -->
+            <div class="col-md-3 mb-2">
+                <select class="form-control" name="city">
+                    <option value="" th:selected="${filter.city == null}" th:text="#{cinema.city.all}">Tất cả tỉnh/thành</option>
+                    <option th:each="ct : ${cities}"
+                            th:value="${ct}"
+                            th:text="${ct}"
+                            th:selected="${filter.city != null} ? ${#strings.equalsIgnoreCase(ct, filter.city)} : false">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Size mỗi trang (tuỳ chọn) -->
+            <div class="col-md-2 mb-2">
+                <select class="form-control" name="size">
+                    <option th:value="6"  th:selected="${filter.size == 6}" th:text="#{cinema.page.size.6}">6 rạp/ trang</option>
+                    <option th:value="12" th:selected="${filter.size == 12}" th:text="#{cinema.page.size.12}">12 rạp/ trang</option>
+                    <option th:value="24" th:selected="${filter.size == 24}" th:text="#{cinema.page.size.24}">24 rạp/ trang</option>
+                    <option th:value="48" th:selected="${filter.size == 48}" th:text="#{cinema.page.size.48}">48 rạp/ trang</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 mb-2">
+                <button type="submit" class="btn btn-primary" th:text="#{cinema.filter}">Lọc</button>
+                <a th:href="@{/admin/cinemas}" class="btn btn-secondary ml-2" th:text="#{cinema.reset}">Reset</a>
+            </div>
+        </div>
+    </form>
+
+    <!-- Danh sách rạp dạng lưới -->
+    <div class="row">
+        <div class="col-md-4 mb-4" th:each="c : ${cinemas}">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="card-title mb-1" th:text="${c.name != null ? c.name : ''} ?: #{cinema.name}">Tên rạp</h5>
+                        <span class="badge badge-info" th:text="${c.city != null ? c.city : ''} ?: #{cinema.city}">Thành phố</span>
+                    </div>
+
+                    <p class="text-muted mb-2" th:text="${c.address != null ? c.address : ''} ?: #{cinema.address}">Địa chỉ</p>
+
+                    <div class="mt-3 d-flex">
+                        <a class="btn btn-outline-primary btn-sm mr-2"
+                           th:if="${c.mapUrl != null && !#strings.isEmpty(c.mapUrl)}"
+                           th:href="${c.mapUrl}"
+                           target="_blank" rel="noopener"
+                           th:text="#{cinema.map}">
+                            Bản đồ
+                        </a>
+
+                        <!-- Sửa hoặc xóa rạp -->
+                        <a th:href="@{'/admim/cinemas/' + ${c.id} + '/edit'}" class="btn btn-outline-secondary btn-sm mr-2" th:text="#{cinema.edit}">Sửa</a>
+                        <a th:href="@{'admin/cinemas/' + ${c.id} + '/delete'}" class="btn btn-outline-danger btn-sm" th:text="#{cinema.delete}">Xoá</a>
+                    </div>
+                </div>
+                <div class="card-footer text-right">
+                    <!-- Xem chi tiết 1 rạp -->
+                    <a th:href="@{'/admin/cinemas/' + ${c.id}}" class="btn btn-primary btn-sm" th:text="#{cinema.detail}">Xem chi tiết</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Không có dữ liệu -->
+        <div class="col-12" th:if="${#lists.isEmpty(cinemas)}">
+            <div class="alert alert-light text-center border" th:text="#{cinema.noresult}">
+                Không tìm thấy rạp nào phù hợp.
+            </div>
+        </div>
+    </div>
+
+    <!-- Phân trang -->
+    <nav th:if="${totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${filter.page == 0} ? 'disabled'">
+                <a class="page-link"
+                   th:text="#{pagination.prev}"
+                   th:href="@{/admin/cinemas(page=${filter.page - 1}, size=${filter.size}, keyword=${filter.keyword}, city=${filter.city})}">
+                    Trước
+                </a>
+            </li>
+
+            <!-- Pages -->
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${i == filter.page} ? 'active'">
+                <a class="page-link"
+                   th:text="${i + 1}"
+                   th:href="@{/admin/cinemas(page=${i}, size=${filter.size}, keyword=${filter.keyword}, city=${filter.city})}">
+                </a>
+            </li>
+
+            <li class="page-item" th:classappend="${filter.page + 1 >= totalPages} ? 'disabled'">
+                <a class="page-link"
+                   th:text="#{pagination.next}"
+                   th:href="@{/admin/cinemas(page=${filter.page + 1}, size=${filter.size}, keyword=${filter.keyword}, city=${filter.city})}">
+                    Sau
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+</html>

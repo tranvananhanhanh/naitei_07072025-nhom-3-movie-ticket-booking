@@ -1,6 +1,6 @@
 package com.naitei.group3.movie_ticket_booking_system.service.impl;
 
-import com.naitei.group3.movie_ticket_booking_system.converter.ConvertToDtos;
+import com.naitei.group3.movie_ticket_booking_system.converter.DtoConverter;
 import com.naitei.group3.movie_ticket_booking_system.dto.request.ShowtimeFilterReq;
 import com.naitei.group3.movie_ticket_booking_system.dto.response.ShowtimeDTO;
 import com.naitei.group3.movie_ticket_booking_system.enums.BookingStatus;
@@ -37,7 +37,7 @@ public class ShowtimeServiceImpl implements ShowtimeService {
                 pageable
         ).map(s -> {
             Long paidSeats = this.getNumOfBookedSeats(s.getId());
-            return ConvertToDtos.convertShowtimeToDTO(s, paidSeats);
+            return DtoConverter.convertShowtimeToDTO(s, paidSeats);
         });
     }
 }
