@@ -37,7 +37,9 @@ public class Booking {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY)
+    private LocalDateTime expiresAt; // giữ ghế trong 10 phút
+
+    @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<BookingSeat> bookingSeats = new HashSet<>();
 
