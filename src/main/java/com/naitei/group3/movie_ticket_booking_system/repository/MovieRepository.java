@@ -1,5 +1,6 @@
 package com.naitei.group3.movie_ticket_booking_system.repository;
 
+import com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,5 +36,5 @@ public interface MovieRepository extends JpaRepository<Movie, Long>, JpaSpecific
         JOIN m.showtimes s
         WHERE s.status = :status
     """)
-    Page<Movie> findMoviesByShowtimeStatus(@Param("status") int status, Pageable pageable);
+    Page<Movie> findMoviesByShowtimeStatus(@Param("status") ShowtimeStatus status, Pageable pageable);
 }
