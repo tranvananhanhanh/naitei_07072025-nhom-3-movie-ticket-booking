@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    th:replace="~{_layouts/admin_layout :: layout('Danh sách phim', ~{::content})}">
+    th:replace="~{_layouts/admin_layout :: layout(#{movie.list.title}, ~{::content})}">
 
 <div th:fragment="content">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="btn-group">
-            <a class="btn btn-outline-primary" href="/admin/movies/upload"
-                title="Nhập Excel thêm phim (placeholder)">Nhập Excel thêm phim</a>
-            <a class="btn btn-outline-danger" href="/admin/movies/bulk-delete" title="Xóa đã chọn (placeholder)">Xóa đã
-                chọn</a>
+            <a class="btn btn-outline-primary" href="/admin/movies/upload" th:title="#{movie.upload.excel}"
+                th:text="#{movie.upload.excel}">Nhập Excel thêm phim</a>
+            <a class="btn btn-outline-danger" href="/admin/movies/bulk-delete" th:title="#{movie.bulk.delete}"
+                th:text="#{movie.bulk.delete}">Xóa đã chọn</a>
         </div>
     </div>
 
@@ -17,25 +17,30 @@
     <form method="get" th:action="@{/admin/movies}" class="mb-4">
         <div class="form-row">
             <div class="col-md-3 mb-2">
-                <input type="text" class="form-control" name="keyword" placeholder="Tìm theo tên hoặc mô tả"
-                    th:value="${keyword}">
+                <input type="text" class="form-control" name="keyword"
+                    th:placeholder="#{movie.filter.keyword.placeholder}" th:value="${keyword}">
             </div>
             <div class="col-md-2 mb-2">
-                <input type="number" class="form-control" name="year" placeholder="Năm" th:value="${year}">
+                <input type="number" class="form-control" name="year" th:placeholder="#{movie.filter.year.placeholder}"
+                    th:value="${year}">
             </div>
             <div class="col-md-2 mb-2">
-                <input type="text" class="form-control" name="genreName" placeholder="Thể loại" th:value="${genreName}">
+                <input type="text" class="form-control" name="genreName"
+                    th:placeholder="#{movie.filter.genre.placeholder}" th:value="${genreName}">
             </div>
             <div class="col-md-2 mb-2">
                 <select class="form-control" name="isActive">
-                    <option value="" th:selected="${isActive == null}">Tất cả</option>
-                    <option th:value="${true}" th:selected="${isActive == true}">Đang chiếu</option>
-                    <option th:value="${false}" th:selected="${isActive == false}">Ngưng chiếu</option>
+                    <option value="" th:selected="${isActive == null}" th:text="#{movie.filter.status.all}">Tất cả
+                    </option>
+                    <option th:value="${true}" th:selected="${isActive == true}"
+                        th:text="#{movie.filter.status.active}">Đang chiếu</option>
+                    <option th:value="${false}" th:selected="${isActive == false}"
+                        th:text="#{movie.filter.status.inactive}">Ngưng chiếu</option>
                 </select>
             </div>
             <div class="col-md-3 mb-2">
-                <button type="submit" class="btn btn-primary">Lọc</button>
-                <a th:href="@{/admin/movies}" class="btn btn-secondary">Reset</a>
+                <button type="submit" class="btn btn-primary" th:text="#{movie.filter.button}">Lọc</button>
+                <a th:href="@{/admin/movies}" class="btn btn-secondary" th:text="#{movie.filter.reset}">Reset</a>
             </div>
         </div>
     </form>
@@ -54,32 +59,36 @@
                     <h5 class="card-title" th:text="${movie.name}"></h5>
                     <p class="card-text text-muted" th:text="${#strings.abbreviate(movie.description, 80)}"></p>
                     <p class="mb-1">
-                        <strong>Thời lượng:</strong>
-                        <span th:text="${movie.duration} + ' phút'"></span>
+                        <strong th:text="#{movie.duration}">Thời lượng:</strong>
+                        <span th:text="${movie.duration} + ' ' + #{movie.duration.unit}"></span>
                     </p>
                     <p class="mb-1">
-                        <strong>Ngày chiếu:</strong>
+                        <strong th:text="#{movie.releaseDate}">Ngày chiếu:</strong>
                         <span
                             th:text="${movie.releaseDate != null ? #temporals.format(movie.releaseDate, 'dd/MM/yyyy') : ''}"></span>
                     </p>
                     <p class="mb-1">
-                        <strong>Thể loại:</strong>
+                        <strong th:text="#{movie.genre}">Thể loại:</strong>
                         <span th:each="g : ${movie.genres}" th:text="${g}" class="badge badge-info mr-1"></span>
                     </p>
                     <p>
-                        <span th:if="${movie.isActive}" class="badge badge-success">Đang chiếu</span>
-                        <span th:unless="${movie.isActive}" class="badge badge-danger">Ngưng chiếu</span>
+                        <span th:if="${movie.isActive}" class="badge badge-success"
+                            th:text="#{movie.status.active}">Đang chiếu</span>
+                        <span th:unless="${movie.isActive}" class="badge badge-danger"
+                            th:text="#{movie.status.inactive}">Ngưng chiếu</span>
                     </p>
                 </div>
 
                 <!-- Xem chi tiết phim or chỉnh sửa -->
                 <div class="card-footer d-flex justify-content-between">
-                    <a th:href="@{'/admin/movies/' + ${movie.id}}" class="btn btn-danger btn-sm">Xem phim</a>
+                    <a th:href="@{'/admin/movies/' + ${movie.id}}" class="btn btn-danger btn-sm"
+                        th:text="#{movie.detail}">Xem phim</a>
                     <div>
                         <a th:href="@{'/admin/movies/' + ${movie.id} + '/edit'}"
-                            class="btn btn-outline-primary btn-sm mr-1" title="Sửa (placeholder)">Sửa</a>
+                            class="btn btn-outline-primary btn-sm mr-1" th:title="#{movie.edit}"
+                            th:text="#{movie.edit}">Sửa</a>
                         <a th:href="@{'/admin/movies/' + ${movie.id} + '/delete'}" class="btn btn-outline-danger btn-sm"
-                            title="Xoá (placeholder)">Xoá</a>
+                            th:title="#{movie.delete}" th:text="#{movie.delete}">Xoá</a>
                     </div>
                 </div>
             </div>
@@ -87,7 +96,7 @@
     </div>
 
     <!-- Neu ko co phim -->
-    <div class="alert alert-light text-center" th:if="${movies.isEmpty()}">
+    <div class="alert alert-light text-center" th:if="${movies.isEmpty()}" th:text="#{movie.noresult}">
         Không tìm thấy phim
     </div>
 
@@ -96,9 +105,8 @@
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
                 <a class="page-link"
-                    th:href="@{/admin/movies(page=${currentPage - 1}, keyword=${keyword}, year=${year}, genreName=${genreName}, isActive=${isActive})}">
-                    Trước
-                </a>
+                    th:href="@{/admin/movies(page=${currentPage - 1}, keyword=${keyword}, year=${year}, genreName=${genreName}, isActive=${isActive})}"
+                    th:text="#{pagination.prev}">Trước</a>
             </li>
 
             <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
@@ -110,9 +118,8 @@
 
             <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
                 <a class="page-link"
-                    th:href="@{/admin/movies(page=${currentPage + 1}, keyword=${keyword}, year=${year}, genreName=${genreName}, isActive=${isActive})}">
-                    Sau
-                </a>
+                    th:href="@{/admin/movies(page=${currentPage + 1}, keyword=${keyword}, year=${year}, genreName=${genreName}, isActive=${isActive})}"
+                    th:text="#{pagination.next}">Sau</a>
             </li>
         </ul>
     </nav>

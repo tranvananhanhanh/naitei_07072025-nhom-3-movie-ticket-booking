@@ -8,7 +8,7 @@ public class ExcelValidationException extends RuntimeException {
     private final List<ExcelErrorDTO> errors;
 
     public ExcelValidationException(List<ExcelErrorDTO> errors) {
-        super("Excel validation failed");
+        super("excel.validation.failed");
         this.errors = errors;
     }
 

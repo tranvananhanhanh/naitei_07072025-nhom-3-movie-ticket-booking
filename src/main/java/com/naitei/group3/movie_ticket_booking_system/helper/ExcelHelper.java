@@ -17,7 +17,8 @@ public class ExcelHelper {
     }
 
     public static boolean isRowEmpty(Row row) {
-        if (row == null) return true;
+        if (row == null)
+            return true;
         for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
             Cell cell = row.getCell(c, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
             if (cell != null && new DataFormatter().formatCellValue(cell).trim().length() > 0) {
