@@ -1,5 +1,8 @@
 package com.naitei.group3.movie_ticket_booking_system.dto.response;
 
+import com.naitei.group3.movie_ticket_booking_system.entity.Hall;
+import com.naitei.group3.movie_ticket_booking_system.entity.Movie;
+import com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -9,15 +12,12 @@ import java.time.LocalTime;
 @Builder
 public record ShowtimeDTO(
         Long id,
-        Long movieId,
-        String movieName,
         LocalDate date,
         LocalTime startTime,
         LocalTime endTime,
         BigDecimal price,
-        String hallName,
-        String cinemaName,
-        Integer totalSeats,
-        Long paidSeats, // số ghế đã đặt
-        Integer status
+        Long paidSeats,
+        ShowtimeStatus status,
+        Movie movie,
+        Hall hall
 ) {}

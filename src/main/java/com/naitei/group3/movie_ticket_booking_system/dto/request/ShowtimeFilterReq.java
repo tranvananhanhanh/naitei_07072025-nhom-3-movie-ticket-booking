@@ -1,5 +1,6 @@
 package com.naitei.group3.movie_ticket_booking_system.dto.request;
 
+import com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -14,7 +15,7 @@ public class ShowtimeFilterReq {
     private String keyword;
     private String cinemaName;
     private LocalDate showDate;
-    private Integer status;
+    private ShowtimeStatus status;
 
     @PositiveOrZero
     private int page = 0;

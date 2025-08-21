@@ -44,17 +44,14 @@ public class DtoConverter {
         if (s == null) return null;
         return ShowtimeDTO.builder()
                 .id(s.getId())
-                .movieId(s.getMovie().getId())
-                .movieName(s.getMovie().getName())
                 .date(s.getStartTime().toLocalDate())
                 .startTime(s.getStartTime().toLocalTime())
                 .endTime(s.getEndTime().toLocalTime())
                 .price(s.getPrice())
-                .hallName(s.getHall().getName())
-                .cinemaName(s.getHall().getCinema().getName())
-                .totalSeats(s.getHall().getTotalSeats())
                 .paidSeats(paidSeats)
                 .status(s.getStatus())
+                .movie(s.getMovie())
+                .hall(s.getHall())
                 .build();
     }
 }

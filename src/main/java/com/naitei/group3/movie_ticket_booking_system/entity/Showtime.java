@@ -1,5 +1,7 @@
 package com.naitei.group3.movie_ticket_booking_system.entity;
 
+import com.naitei.group3.movie_ticket_booking_system.converter.ShowtimeStatusConverter;
+import com.naitei.group3.movie_ticket_booking_system.enums.ShowtimeStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,7 +37,8 @@ public class Showtime {
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
-    private Integer status;
+    @Convert(converter = ShowtimeStatusConverter.class)
+    private ShowtimeStatus status;
 
     private BigDecimal price;
 
