@@ -14,3 +14,9 @@ spring.thymeleaf.cache=false
 
 spring.messages.basename=messages
 spring.messages.encoding=UTF-8
+
+# VNPAY configuration
+vnpay.tmnCode=
+vnpay.hashSecret=
+vnpay.payUrl=
+vnpay.returnUrl=

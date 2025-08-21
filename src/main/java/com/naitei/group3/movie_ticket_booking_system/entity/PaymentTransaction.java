@@ -1,8 +1,12 @@
 package com.naitei.group3.movie_ticket_booking_system.entity;
+
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import com.naitei.group3.movie_ticket_booking_system.enums.PaymentStatus;
 
 @Entity
 @Table(name = "paymenttransactions")
@@ -22,5 +26,17 @@ public class PaymentTransaction {
 
     private BigDecimal amount;
 
-    private Integer status;
+    @Enumerated(EnumType.STRING) // Lưu chuỗi: PENDING, SUCCESS, FAILED
+    @Column(name = "status", nullable = false)
+    private PaymentStatus status;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
 }
