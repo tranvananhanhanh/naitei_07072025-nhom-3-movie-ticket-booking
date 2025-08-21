@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{_layouts/admin_layout :: layout(#{hall.viewDetails}, ~{::content})}">
+
+<div th:fragment="content">
+
+    <!-- Thêm ghế từ excel or Xóa phòng -->
+    <div class="hall-actions">
+        <a th:href="@{'/admin/cinemas/{cinema.id}/halls/{hall.id}' + '/upload'}"
+           class="btn btn-success btn-sm mr-2"
+           th:text="#{button.addSeatsFromExcel}"></a>
+
+        <!-- edit -->
+        <a th:href="@{'/admin/cinemas/{cinema.id}/halls/{hall.id}' + '/delete'}"
+           class="btn btn-outline-secondary btn-sm mr-2"
+           th:text="#{button.delete}"></a>
+    </div>
+
+    <!-- Thống kê ghế -->
+    <div class="hall-stats">
+        <p>
+            <strong th:text="#{hall.totalSeats}"></strong>:
+            <span th:text="${totalSeats}"></span>
+        </p>
+        <ul>
+            <li><span th:text="#{hall.type.standard}"></span>: <span th:text="${seatCount['standard']}"></span></li>
+            <li><span th:text="#{hall.type.vip}"></span>: <span th:text="${seatCount['vip']}"></span></li>
+            <li><span th:text="#{hall.type.couple}"></span>: <span th:text="${seatCount.['couple']}"></span></li>
+        </ul>
+    </div>
+
+    <div class="screen" th:text="#{hall.screen}"></div>
+
+    <!-- Sơ đồ ghế -->
+    <div class="seats-container">
+
+        <!-- Cửa vào -->
+        <div class="entry-door" th:text="#{hall.entry-door}"></div>
+
+        <!-- Cửa ra -->
+        <div class="exit-door" th:text="#{hall.exit-door}"></div>
+
+        <!-- Nếu chưa có ghế -->
+        <div th:if="${#maps.isEmpty(groupedSeats)}" class="no-seats">
+            <p th:text="#{hall.noSeats}"></p>
+        </div>
+
+        <div th:unless="${#maps.isEmpty(groupedSeats)}" th:each="entry : ${groupedSeats.entrySet()}">
+            <div class="seat-row">
+                <!-- Hàng ghế -->
+                <div class="row-label" th:text="${entry.key}"></div>
+
+                <!-- Các ghế trong hàng -->
+                <div th:each="seat : ${entry.value}"
+                     th:class="'seat ' + ${seat.seatTypeName.toLowerCase()}">
+                    <!-- Hiển thị số ghế -->
+                    <span th:text="${seat.seatColumn}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item">
+            <div class="seat-box standard"></div>
+            <span th:text="#{hall.type.standard}"></span>
+        </div>
+        <div class="legend-item">
+            <div class="seat-box vip"></div>
+            <span th:text="#{hall.type.vip}"></span>
+        </div>
+        <div class="legend-item">
+            <div class="seat-box couple"></div>
+            <span th:text="#{hall.type.couple}"></span>
+        </div>
+    </div>
+
+</div>
+
+</html>

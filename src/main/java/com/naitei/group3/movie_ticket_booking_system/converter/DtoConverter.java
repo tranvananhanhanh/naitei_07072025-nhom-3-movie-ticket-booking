@@ -2,9 +2,11 @@ package com.naitei.group3.movie_ticket_booking_system.converter;
 
 import com.naitei.group3.movie_ticket_booking_system.dto.response.CinemaDTO;
 import com.naitei.group3.movie_ticket_booking_system.dto.response.MovieDTO;
+import com.naitei.group3.movie_ticket_booking_system.dto.response.SeatDTO;
 import com.naitei.group3.movie_ticket_booking_system.dto.response.ShowtimeDTO;
 import com.naitei.group3.movie_ticket_booking_system.entity.Cinema;
 import com.naitei.group3.movie_ticket_booking_system.entity.Movie;
+import com.naitei.group3.movie_ticket_booking_system.entity.Seat;
 import com.naitei.group3.movie_ticket_booking_system.entity.Showtime;
 
 import java.util.stream.Collectors;
@@ -52,6 +54,18 @@ public class DtoConverter {
                 .status(s.getStatus())
                 .movie(s.getMovie())
                 .hall(s.getHall())
+                .build();
+    }
+
+    public static SeatDTO convertSeatToDTO(Seat seat) {
+        if (seat == null) return null;
+
+        return SeatDTO.builder()
+                .id(seat.getId())
+                .seatRow(seat.getSeatRow())
+                .seatColumn(seat.getSeatColumn())
+                .seatTypeName(seat.getSeatType().getName())
+                .priceMultiplier(seat.getSeatType().getPriceMultiplier())
                 .build();
     }
 }

@@ -1,0 +1,190 @@
+/* Định dạng cho màn hình */
+.screen {
+    text-align: center;
+    background: #ddd;
+    padding: 10px;
+    margin: 20px auto;
+    font-weight: bold;
+    border-radius: 5px;
+    width: 60%;
+}
+
+/* Khung chứa sơ đồ ghế */
+.seats-container {
+    background: rgba(255, 255, 255, 0.05);
+    position: relative;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hall-actions {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 15px 0 20px;
+    gap: 10px;
+}
+
+/* HALL STATS  */
+.hall-stats {
+    background-color: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    margin-top: 15px;
+    max-width: 350px;
+}
+
+.hall-stats p {
+    margin: 0 0 8px;
+    font-size: 15px;
+    color: #333;
+}
+
+.hall-stats strong {
+    color: #007bff;
+}
+
+.hall-stats ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.hall-stats li {
+    font-size: 14px;
+    padding: 4px 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed #ddd;
+}
+
+.hall-stats li:last-child {
+    border-bottom: none;
+}
+
+.entry-door {
+    position: absolute;
+    bottom: -50px;   /* nằm dưới sơ đồ */
+    left: 0;
+    background: #2ecc71;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+/* Cửa ra */
+.exit-door {
+    position: absolute;
+    top: -50px;     /* nằm trên sơ đồ */
+    right: 0;
+    background: #e74c3c;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+/* Nhãn cho mỗi hàng ghế */
+.row-label {
+    width: 30px;
+    font-weight: bold;
+    font-size: 20px;
+    margin-right: 10px;
+    text-align: right;
+}
+/* Định dạng hàng ghế */
+.seat-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+
+
+/* Định dạng cho mỗi ghế */
+.seat {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin: 3px;
+    text-align: center;
+    line-height: 36px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+}
+
+/* Màu sắc cho từng loại ghế */
+.standard {
+    background: #444;
+    color: #fff;
+}
+
+.vip {
+    background: gold;
+    color: #000;
+}
+
+.couple {
+    background: tomato;
+    color: #fff;
+}
+
+/* Container legend */
+.legend {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Mỗi item trong legend */
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.legend-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Ô vuông nhỏ hiển thị màu */
+.seat-box {
+    width: 46px;
+    height: 46px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.no-seats {
+    text-align: center;
+    margin: 40px 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #666;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+}
+
