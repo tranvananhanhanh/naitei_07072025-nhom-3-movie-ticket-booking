@@ -10,4 +10,5 @@ public interface CinemaService {
 
     Page<CinemaDTO> searchCinema(String keyword, String city, Pageable pageable);
     List<String> getAllCities();
+    CinemaDTO getCinemaById(Long id);
 }

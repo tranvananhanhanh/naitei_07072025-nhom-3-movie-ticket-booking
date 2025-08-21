@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{_layouts/admin_layout :: layout(${cinema.name}, ~{::content})}">
+
+<div th:fragment="content">
+
+    <!-- Thông tin chi tiết của rạp -->
+    <div class="card">
+        <div class="card-body">
+            <p><strong th:text="#{cinema.address}"></strong>: <span th:text="${cinema.address}"></span></p>
+            <p><strong th:text="#{cinema.city}"></strong>: <span th:text="${cinema.city}"></span></p>
+            <p><strong th:text="#{cinema.map}"></strong>:
+                <a th:href="${cinema.mapUrl}" target="_blank" th:text="#{cinema.map.link}"></a>
+            </p>
+
+            <!-- Sửa, xóa ttin rạp chiếu -->
+            <div class="mt-3">
+
+                <!--    Add hall from excel-->
+                <a th:href="@{'/admin/cinemas/' + ${cinema.id} + '/upload'}"
+                   class="btn btn-success btn-sm mr-2"
+                   th:text="#{button.addHallsFromExcel}"></a>
+
+                <!-- edit -->
+                <a th:href="@{'/admin/cinemas/' + ${cinema.id} + '/edit'}"
+                   class="btn btn-outline-secondary btn-sm mr-2"
+                   th:text="#{button.edit}"></a>
+
+                <!-- delete -->
+                <a th:href="@{'/admin/cinemas/' + ${cinema.id} + 'delete'}"
+                   class="btn btn-outline-danger btn-sm"
+                   th:onclick="'return confirm(\'' + #{cinema.delete.confirm} + '\')'"
+                   th:text="#{button.delete}"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dsach phòng chiếu -->
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5 class="card-title" th:text="#{hall.list}"></h5>
+
+            <!-- phòng chiếu -->
+            <div class="row">
+                <div class="col-md-4 mb-4" th:each="hall : ${halls}">
+                    <!-- Hiển thị pchieu theo box -->
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <h4 class="card-title" th:text="${hall.name}"></h4>
+
+                            <p class="card-text">
+                                <strong th:text="#{hall.totalSeats}"></strong>:
+                                <span th:text="${hall.totalSeats}"></span>
+                            </p>
+
+                            <!-- Xem chi tiết 1 phòng -->
+                            <a th:href="@{'/admin/cinemas/' + ${cinema.id} + '/halls/' + ${hall.id}}"
+                               class="btn btn-info btn-sm"
+                               th:text="#{button.viewDetail}"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Back to dsach rap -->
+    <div class="mt-4">
+        <a th:href="@{/admin/cinemas}"
+           class="btn btn-secondary"
+           th:text="#{button.backToList}"></a>
+    </div>
+
+</div>
+
+</html>

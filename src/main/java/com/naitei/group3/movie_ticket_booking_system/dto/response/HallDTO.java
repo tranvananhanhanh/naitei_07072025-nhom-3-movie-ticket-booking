@@ -2,16 +2,10 @@ package com.naitei.group3.movie_ticket_booking_system.dto.response;
 
 import lombok.Builder;
 
-import java.util.List;
-
 @Builder
-public record CinemaDTO(
+public record HallDTO(
         Long id,
-
         String name,
-        String address,
-        String city,
-        String mapUrl,
-        List<HallDTO> halls
+        Integer totalSeats
 ) {
 }
