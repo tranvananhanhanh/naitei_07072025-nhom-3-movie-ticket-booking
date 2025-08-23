@@ -1,6 +1,7 @@
 package com.naitei.group3.movie_ticket_booking_system.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -34,18 +35,27 @@ public class Movie {
 	private LocalDate releaseDate;
 
 	@Column(name = "is_active")
-	private Boolean isActive;
+	private Boolean isActive = true;
 
+	@Column(name = "deleted_at")
+	private LocalDateTime deletedAt;
+
+	@Builder.Default
 	@OneToMany(mappedBy = "movie", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<Showtime> showtimes = new HashSet<>();
 
+	@Builder.Default
 	@OneToMany(mappedBy = "movie", fetch = FetchType.LAZY)
 	@JsonIgnore
 	private Set<Rating> ratings = new HashSet<>();
 
-	// Many-to-Many with Genre
+	@Builder.Default
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "movie_genre", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
+	@JoinTable(
+			name = "movie_genre",
+			joinColumns = @JoinColumn(name = "movie_id"),
+			inverseJoinColumns = @JoinColumn(name = "genre_id")
+	)
 	private Set<Genre> genres = new HashSet<>();
 }

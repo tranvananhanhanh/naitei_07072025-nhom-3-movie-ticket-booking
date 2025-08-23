@@ -13,4 +13,5 @@ public interface MovieService {
 
     MovieDTO getMovieById(Long id);
     Page<Movie> getNowShowingMovies(Pageable pageable);
+    void delete(Long id);
 }

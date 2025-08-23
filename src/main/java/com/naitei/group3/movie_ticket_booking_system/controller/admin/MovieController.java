@@ -1,11 +1,22 @@
 package com.naitei.group3.movie_ticket_booking_system.controller.admin;
 
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
@@ -115,5 +126,18 @@ public class MovieController extends BaseAdminController {
             return messageSource.getMessage("excel.upload.invalidFormat", null, LocaleContextHolder.getLocale());
         }
         return null;
+    }
+
+    @GetMapping("/{id}/delete")
+    public String showDeletePage(@PathVariable Long id, Model model) {
+        MovieDTO movie = movieService.getMovieById(id);
+        model.addAttribute("movie", movie);
+        return getAdminView("movies/delete");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
+        movieService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
