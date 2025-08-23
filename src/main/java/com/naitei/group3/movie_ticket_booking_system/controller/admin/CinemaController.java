@@ -5,10 +5,10 @@ import com.naitei.group3.movie_ticket_booking_system.dto.response.CinemaDTO;
 import com.naitei.group3.movie_ticket_booking_system.entity.Hall;
 import com.naitei.group3.movie_ticket_booking_system.dto.response.ExcelErrorDTO;
 import com.naitei.group3.movie_ticket_booking_system.exception.ExcelValidationException;
-import com.naitei.group3.movie_ticket_booking_system.service.impl.CinemaServiceImpl;
-import com.naitei.group3.movie_ticket_booking_system.service.impl.ExcelCinemaServiceImpl;
-import com.naitei.group3.movie_ticket_booking_system.service.impl.HallServiceImpl;
+import com.naitei.group3.movie_ticket_booking_system.service.CinemaService;
+import com.naitei.group3.movie_ticket_booking_system.service.HallService;
 
+import com.naitei.group3.movie_ticket_booking_system.service.impl.ExcelCinemaServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +34,8 @@ public class CinemaController extends BaseAdminController {
 
     private static final Logger logger = LoggerFactory.getLogger(CinemaController.class);
 
-    private final CinemaServiceImpl cinemaService;
-    private final HallServiceImpl hallService;
-    // private final HallService hallService;
+    private final CinemaService cinemaService;
+    private final HallService hallService;
     private final ExcelCinemaServiceImpl excelCinemaService;
     private final MessageSource messageSource;
 
@@ -53,7 +52,7 @@ public class CinemaController extends BaseAdminController {
         return getAdminView("cinemas/index");
     }
 
-    @GetMapping("/admin/cinemas/{id}")
+    @GetMapping("/{id}")
     public String getCinemaDetail(@PathVariable Long id, Model model) {
         CinemaDTO cinema = cinemaService.getCinemaById(id); // nếu không có sẽ throw
         List<Hall> halls = hallService.getHallsByCinemaId(id);
