@@ -16,6 +16,8 @@ import java.util.*;
 
 public class ExcelMovieHelper {
 
+    public static final int MIN_COLUMNS = 7; // name, description, duration, poster, release_date, is_active, genres
+
     public static boolean hasExcelFormat(MultipartFile file) {
         return ExcelHelper.hasExcelFormat(file.getContentType());
     }
@@ -24,25 +26,68 @@ public class ExcelMovieHelper {
             throws ExcelValidationException {
         List<Movie> movies = new ArrayList<>();
         List<ExcelErrorDTO> errors = new ArrayList<>();
+        Set<String> uniqueMovies = new HashSet<>(); // Thêm dòng này
         try (Workbook workbook = WorkbookFactory.create(is)) {
             Sheet sheet = workbook.getNumberOfSheets() > 0 ? workbook.getSheetAt(0) : null;
             if (sheet == null) {
                 throw new RuntimeException("No sheet found in Excel file");
             }
             Iterator<Row> rows = sheet.iterator();
-            if (rows.hasNext())
-                rows.next(); // Skip header
+            if (!rows.hasNext()) {
+                throw new RuntimeException("No header row found in Excel file");
+            }
+            Row headerRow = rows.next();
+            Map<String, Integer> colIndexMap = new HashMap<>();
+            for (Cell cell : headerRow) {
+                colIndexMap.put(cell.getStringCellValue().trim().toLowerCase(), cell.getColumnIndex());
+            }
+
+            // Kiểm tra số cột tối thiểu ở header
+            if (headerRow.getLastCellNum() < MIN_COLUMNS) {
+                errors.add(new ExcelErrorDTO(headerRow.getRowNum() + 1,
+                        "Missing columns in header row, required at least " + MIN_COLUMNS + " columns"));
+                throw new ExcelValidationException(errors);
+            }
+
+            // Danh sách các cột bắt buộc
+            List<String> requiredColumns = List.of("name", "description", "duration", "poster", "release_date",
+                    "is_active", "genres");
+            for (String col : requiredColumns) {
+                if (!colIndexMap.containsKey(col)) {
+                    errors.add(new ExcelErrorDTO(headerRow.getRowNum() + 1, "Missing required column: " + col));
+                }
+            }
+            if (!errors.isEmpty()) {
+                throw new ExcelValidationException(errors);
+            }
 
             while (rows.hasNext()) {
                 Row row = rows.next();
                 int rowNumber = row.getRowNum() + 1;
+
+                // Kiểm tra số cột tối thiểu ở từng dòng dữ liệu
+                if (row.getLastCellNum() < MIN_COLUMNS) {
+                    errors.add(new ExcelErrorDTO(rowNumber, "Missing columns at row " + rowNumber));
+                    continue;
+                }
 
                 if (ExcelHelper.isRowEmpty(row)) {
                     continue;
                 }
 
                 List<String> errorMessages = new ArrayList<>();
-                Movie movie = parseMovieRow(row, genreRepository, errorMessages);
+                Movie movie = parseMovieRow(row, genreRepository, errorMessages, colIndexMap);
+
+                // Kiểm tra trùng lặp phim theo name + release_date
+                String name = ExcelHelper.getStringCell(row, colIndexMap.get("name")).trim().toLowerCase();
+                String releaseDate = ExcelHelper.getStringCell(row, colIndexMap.get("release_date")).trim();
+                String key = name + "-" + releaseDate;
+                if (!name.isEmpty() && !releaseDate.isEmpty()) {
+                    if (!uniqueMovies.add(key)) {
+                        errorMessages.add("Duplicate movie in import file: name '" + name + "' and release date '"
+                                + releaseDate + "' already exist in file");
+                    }
+                }
 
                 if (!errorMessages.isEmpty()) {
                     errors.add(new ExcelErrorDTO(rowNumber, String.join("; ", errorMessages)));
@@ -63,30 +108,24 @@ public class ExcelMovieHelper {
         return movies;
     }
 
-    private static Movie parseMovieRow(Row row, GenreRepository genreRepository, List<String> errorMessages) {
-        // check mininum columns
-        int minColumns = 7;
-        if (row.getLastCellNum() < minColumns) {
-            errorMessages.add("Missing columns! At least " + minColumns + " columns are required.");
-            return new Movie();
-        }
-
+    private static Movie parseMovieRow(Row row, GenreRepository genreRepository, List<String> errorMessages,
+            Map<String, Integer> colIndexMap) {
         Movie movie = new Movie();
 
         // Name
-        String name = ExcelHelper.getStringCell(row, 0);
+        String name = ExcelHelper.getStringCell(row, colIndexMap.get("name"));
         if (name.isEmpty())
             errorMessages.add("Name is required");
         movie.setName(name);
 
         // Description
-        String desc = ExcelHelper.getStringCell(row, 1);
+        String desc = ExcelHelper.getStringCell(row, colIndexMap.get("description"));
         if (desc.isEmpty())
             errorMessages.add("Description is required");
         movie.setDescription(desc);
 
         // Duration
-        String durationStr = ExcelHelper.getStringCell(row, 2);
+        String durationStr = ExcelHelper.getStringCell(row, colIndexMap.get("duration"));
         if (durationStr.isEmpty()) {
             errorMessages.add("Duration is required");
         } else {
@@ -101,13 +140,13 @@ public class ExcelMovieHelper {
         }
 
         // Poster
-        String poster = ExcelHelper.getStringCell(row, 3);
+        String poster = ExcelHelper.getStringCell(row, colIndexMap.get("poster"));
         if (poster.isEmpty())
             errorMessages.add("Poster is required");
         movie.setPoster(poster);
 
         // Release date
-        String releaseDateStr = ExcelHelper.getStringCell(row, 4);
+        String releaseDateStr = ExcelHelper.getStringCell(row, colIndexMap.get("release_date"));
         if (releaseDateStr.isEmpty()) {
             errorMessages.add("Release date is required");
         } else {
@@ -119,7 +158,7 @@ public class ExcelMovieHelper {
         }
 
         // is_active
-        String isActiveStr = ExcelHelper.getStringCell(row, 5);
+        String isActiveStr = ExcelHelper.getStringCell(row, colIndexMap.get("is_active"));
         if (isActiveStr.isEmpty()) {
             errorMessages.add("IsActive is required");
         } else {
@@ -132,7 +171,7 @@ public class ExcelMovieHelper {
         }
 
         // Genres
-        String genresStr = ExcelHelper.getStringCell(row, 6);
+        String genresStr = ExcelHelper.getStringCell(row, colIndexMap.get("genres"));
         Set<Genre> genres = new HashSet<>();
         if (genresStr.isEmpty()) {
             errorMessages.add("Genres are required");

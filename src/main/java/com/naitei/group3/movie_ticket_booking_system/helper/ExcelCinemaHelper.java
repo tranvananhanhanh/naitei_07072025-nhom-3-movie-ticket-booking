@@ -11,7 +11,7 @@ import java.util.*;
 
 public class ExcelCinemaHelper {
 
-    private static final int MIN_COLUMNS = 5; // Name, Address, City, URL, ...
+    private static final int MIN_COLUMNS = 4; // name, address, city , url
 
     public static boolean hasExcelFormat(MultipartFile file) {
         return ExcelHelper.hasExcelFormat(file.getContentType());
@@ -27,8 +27,24 @@ public class ExcelCinemaHelper {
                 throw new RuntimeException("No sheet found in Excel file");
             }
             Iterator<Row> rows = sheet.iterator();
-            if (rows.hasNext())
-                rows.next(); // Skip header
+            if (!rows.hasNext()) {
+                throw new RuntimeException("No header row found in Excel file");
+            }
+            Row headerRow = rows.next();
+            Map<String, Integer> colIndexMap = new HashMap<>();
+            for (Cell cell : headerRow) {
+                colIndexMap.put(cell.getStringCellValue().trim().toLowerCase(), cell.getColumnIndex());
+            }
+
+            List<String> requiredColumns = List.of("name", "address", "city", "map_url");
+            for (String col : requiredColumns) {
+                if (!colIndexMap.containsKey(col)) {
+                    errors.add(new ExcelErrorDTO(headerRow.getRowNum() + 1, "Missing required column: " + col));
+                }
+            }
+            if (!errors.isEmpty()) {
+                throw new ExcelValidationException(errors);
+            }
 
             while (rows.hasNext()) {
                 Row row = rows.next();
@@ -39,7 +55,7 @@ public class ExcelCinemaHelper {
                 }
 
                 List<String> errorMessages = new ArrayList<>();
-                Cinema cinema = parseCinemaRow(row, errorMessages);
+                Cinema cinema = parseCinemaRow(row, errorMessages, colIndexMap);
 
                 String key = (cinema.getName() + "|" + cinema.getAddress() + "|" + cinema.getCity()).toLowerCase();
                 if (!uniqueKeys.add(key)) {
@@ -65,34 +81,29 @@ public class ExcelCinemaHelper {
         return cinemas;
     }
 
-    private static Cinema parseCinemaRow(Row row, List<String> errorMessages) {
-        if (row.getLastCellNum() < MIN_COLUMNS) {
-            errorMessages.add("Missing columns! At least " + MIN_COLUMNS + " columns are required.");
-            return new Cinema();
-        }
-
+    private static Cinema parseCinemaRow(Row row, List<String> errorMessages, Map<String, Integer> colIndexMap) {
         Cinema cinema = new Cinema();
 
         // Name
-        String name = ExcelHelper.getStringCell(row, 1);
+        String name = ExcelHelper.getStringCell(row, colIndexMap.get("name"));
         if (name.isEmpty())
             errorMessages.add("Name is required");
         cinema.setName(name);
 
         // Address
-        String address = ExcelHelper.getStringCell(row, 2);
+        String address = ExcelHelper.getStringCell(row, colIndexMap.get("address"));
         if (address.isEmpty())
             errorMessages.add("Address is required");
         cinema.setAddress(address);
 
         // City
-        String city = ExcelHelper.getStringCell(row, 3);
+        String city = ExcelHelper.getStringCell(row, colIndexMap.get("city"));
         if (city.isEmpty())
             errorMessages.add("City is required");
         cinema.setCity(city);
 
-        // URL
-        String url = ExcelHelper.getStringCell(row, 4);
+        // Map URL
+        String url = ExcelHelper.getStringCell(row, colIndexMap.get("map_url"));
         if (url.isEmpty())
             errorMessages.add("URL is required");
         cinema.setMapUrl(url);
