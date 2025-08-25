@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{_layouts/admin_layout :: layout(#{movie.detail.title(${movie.name})}, ~{::content})}">
+
+<div th:fragment="content">
+  <div class="row">
+
+    <!-- Poster -->
+    <div class="col-md-4">
+      <img th:src="@{${movie.poster}}" th:alt="#{movie.poster}" class="img-fluid rounded shadow">
+    </div>
+
+    <!-- Thông tin -->
+    <div class="col-md-8">
+      <p>
+        <strong th:text="#{movie.duration}"></strong>:
+        <span th:text="${movie.duration} + ' ' + #{movie.minutes}"></span>
+      </p>
+      <p>
+        <strong th:text="#{movie.releaseDate}"></strong>:
+        <span th:text="${#temporals.format(movie.releaseDate, 'dd/MM/yyyy')}"></span>
+      </p>
+      <p>
+        <strong th:text="#{movie.genres}"></strong>:
+        <span class="badge badge-info mr-1" th:each="g : ${movie.genres}" th:text="${g}"></span>
+      </p>
+      <p>
+        <strong th:text="#{movie.status}"></strong>:
+        <span th:if="${movie.isActive}" class="badge badge-success" th:text="#{movie.active}"></span>
+        <span th:unless="${movie.isActive}" class="badge badge-danger" th:text="#{movie.inactive}"></span>
+      </p>
+      <p><strong th:text="#{movie.description}"></strong>:</p>
+      <p th:text="${movie.description}"></p>
+
+      <!-- Chỉ còn 1 nút Delete -->
+      <button class="btn btn-danger btn-sm"
+              th:onclick="|deleteMovie(${movie.id})|"
+              th:text="#{movie.delete}">
+      </button>
+
+      <a th:href="@{/admin/movies}" class="btn btn-secondary ml-2" th:text="#{movie.back}"></a>
+    </div>
+
+  </div>
+  <script th:inline="javascript">
+    const i18n = {
+        confirmDelete: [[#{confirm.delete}]],
+        successDelete: [[#{success.delete}]],
+        errorDelete: [[#{error.delete('')}]],
+        errorNetwork: [[#{error.network('')}]]
+    };
+  </script>
+  <div th:fragment="scripts">
+    <script th:src="@{/js/delete.js}"></script>
+  </div>
+</div>
+</html>
