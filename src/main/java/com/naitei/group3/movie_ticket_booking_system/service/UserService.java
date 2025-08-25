@@ -1,4 +1,4 @@
-package com.naitei.group3.movie_ticket_booking_system.service.impl;
+package com.naitei.group3.movie_ticket_booking_system.service;
 
 import com.naitei.group3.movie_ticket_booking_system.dto.request.RegisterRequestDTO;
 import com.naitei.group3.movie_ticket_booking_system.entity.User;

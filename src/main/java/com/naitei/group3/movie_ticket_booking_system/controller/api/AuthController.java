@@ -4,14 +4,10 @@ import com.naitei.group3.movie_ticket_booking_system.dto.request.RegisterRequest
 import com.naitei.group3.movie_ticket_booking_system.dto.response.UserResponseDTO;
 import com.naitei.group3.movie_ticket_booking_system.enums.RoleType;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.naitei.group3.movie_ticket_booking_system.entity.User;
-import com.naitei.group3.movie_ticket_booking_system.service.impl.UserService;
+import com.naitei.group3.movie_ticket_booking_system.service.UserService;
 
 @RestController("apiAuthController")
 @RequestMapping("/api/v1/auth")
