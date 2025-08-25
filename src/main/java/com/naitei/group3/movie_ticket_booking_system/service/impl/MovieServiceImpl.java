@@ -45,7 +45,7 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Page<Movie> getNowShowingMovies(Pageable pageable) {
-        return movieRepository.findMoviesByShowtimeStatus(ShowtimeStatus.AVAILABLE.getValue(), pageable);
+        return movieRepository.findMoviesByShowtimeStatus(ShowtimeStatus.AVAILABLE, pageable);
     }
 
     @Override

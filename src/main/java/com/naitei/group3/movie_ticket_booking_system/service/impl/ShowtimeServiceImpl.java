@@ -34,20 +34,11 @@ public class ShowtimeServiceImpl implements ShowtimeService {
 
     @Override
     public Page<ShowtimeDTO> filterShowtime(ShowtimeFilterReq filter, Pageable pageable) {
-        Integer statusValue = null;
-        if (filter.getStatus() != null) {
-            int value = filter.getStatus().getValue();
-            // Validate status hợp lệ (giả sử chỉ có -1, 0, 1 là hợp lệ)
-            if (value != -1 && value != 0 && value != 1) {
-                throw new IllegalArgumentException("Invalid status value: " + value);
-            }
-            statusValue = value;
-        }
 
         return showtimeRepository.filterShowtimes(
                 filter.getKeyword(),
                 filter.getCinemaName(),
-                statusValue,
+                filter.getStatus(),
                 filter.getShowDate(),
                 pageable).map(s -> {
                     Long paidSeats = this.getNumOfBookedSeats(s.getId());
